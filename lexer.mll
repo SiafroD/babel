@@ -27,22 +27,14 @@
                 match Hashtbl.find_opt kws id with
                 | Some kw -> kw
                 | None -> ID id
-    
-    let cident =
-        let kws = Hashtbl.create 20 in
-        List.iter (fun (kw, token) -> Hashtbl.add kws kw token)
-        [
-            "Enum", ENUM;
-            "String", STRING;
-            "Scanner", SCANNER;
-        ]
+
 }
 
 rule token = parse 
 
 | '\n'      {new_line lexbuf; token lexbuf}
 
-| [' ' '\t'] {token lexbuf}
+| [' ' '\t'] { SPACE }
 
 | "//"[^'\n']* {token lexbuf}
 
@@ -52,6 +44,8 @@ rule token = parse
 | ")"       { PF }
 | "<"       { CO }
 | ">"       { CF }
+| ","       { VIRG }
+| ";"       { PV }
 
 | ['a'-'z'](['A'-'Z''a'-'z''0'-'9']|"-"|"_")* as n 
     { ident n }
